@@ -1,6 +1,9 @@
 #include <iostream>
 #include "Reversi.h"
 #include "Board.h"
+#include <windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 
 using namespace std;
 
@@ -34,8 +37,6 @@ void Reversi::updataScreen() {
 		cout << "¡³" << endl;
 
 	cout << endl;
-	//Key tips
-	//cout << "NewGame¡G\tEnter" << endl;
 
 	//check if someone has won the game
 	if (board->black_num == 0 || board->white_num == 0 || board->black_num + board->white_num == 64)
@@ -86,9 +87,10 @@ void Reversi::place(int i, int j) {
 	}
 	if (placeFlag)
 	{
+		PlaySound(TEXT("awp.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		board->table[i][j] = nowTurn;
 		switchPlayer();
-		if (canPlayAny() == false)	//someone can not play any piece
+		if (canPlayAny() == false)	//if someone can not play any piece
 			switchPlayer();
 		updataScreen();
 	}
@@ -99,20 +101,20 @@ void Reversi::switchPlayer() {
 	else nowTurn = BLACK;
 }
 
-bool Reversi::canPlay(int x, int y, int deltaX, int deltaY, bool isFirst, bool play) {
-	x += deltaX;
-	y += deltaY;
+bool Reversi::canPlay(int x, int y, int dX, int dY, bool firstFlag, bool playFlag) {
+	x += dX;
+	y += dY;
 	if (x < 0 || x>7 || y < 0 || y > 7) return false;
 
-	if (isFirst)
+	if (firstFlag)
 	{
 		if (board->table[x][y] == nowTurn)
 			return false;
 		else if (board->table[x][y] == 0)
 			return false;
-		else if (canPlay(x, y, deltaX, deltaY, false, play))
+		else if (canPlay(x, y, dX, dY, false, playFlag))
 		{
-			if(play)
+			if(playFlag)
 				board->table[x][y] = nowTurn;
 			return true;
 		}
@@ -123,15 +125,15 @@ bool Reversi::canPlay(int x, int y, int deltaX, int deltaY, bool isFirst, bool p
 	{
 		if (board->table[x][y] == nowTurn)
 		{
-			if (play)
+			if (playFlag)
 				board->table[x][y] = nowTurn;
 			return true;
 		}
 		else if (board->table[x][y] == 0)
 			return false;
-		else if (canPlay(x, y, deltaX, deltaY, false, play))
+		else if (canPlay(x, y, dX, dY, false, playFlag))
 		{
-			if (play)
+			if (playFlag)
 				board->table[x][y] = nowTurn;
 			return true;
 		}

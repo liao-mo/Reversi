@@ -14,7 +14,7 @@ public:
 	void buttonPressed();
 	void place(int i, int j);
 	void switchPlayer();
-	bool canPlay(int x, int y, int deltaX, int deltaY, bool isFirst, bool play);	//check 8 directions that if we can place this piece.
+	bool canPlay(int x, int y, int dX, int dY, bool firstFlag, bool playFlag);	//check 8 directions that if we can place this piece.
 	bool canPlayAny();
 
 	Board* board;

@@ -9,8 +9,9 @@
 
 #include <windows.h>
 #include <iostream>
+#include <mmsystem.h>
 #include "Reversi.h"
-
+#pragma comment(lib, "winmm.lib")
 
 using namespace std;
 
@@ -100,6 +101,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 
 	//intially update the screen
 	reversi.updataScreen();
+
+	//play sound
+	PlaySound(TEXT("chaos drifters.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
 	//==== °õ¦æ°T®§°j°é ====//
 	MSG msg = { };
