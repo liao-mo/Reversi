@@ -1,11 +1,20 @@
+//Name: 廖墨哲
+//ID: B10815026
+//Date: 2020/12/26
+//Title: Reversi game
+
 #ifndef UNICODE
 #define UNICODE
 #endif 
 
 #include <windows.h>
 #include <iostream>
+#include "Reversi.h"
+
 
 using namespace std;
+
+Reversi reversi;
 
 LRESULT CALLBACK WindowProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 
@@ -14,36 +23,42 @@ void KeyDownEvent( WPARAM wParam )
 	//==== Tab、Enter、Ctrl... ====//
 	if( wParam == VK_TAB )
 	{
-		cout << "Tab Down" << endl;
+		//cout << "Tab Down" << endl;
 	}
 
 	//==== 英文字母或數字 ====//
-	switch( wParam )
+	//set button status
+	for (int i = 0; i < 8; i++)
 	{
-	case 'a':
-	case 'A':
-		cout << "A Down" << endl;
-		break;
+		if (wParam == 'a' + i || wParam == 'A' + i)
+			reversi.buttonAtoH[i] = true;
+		if (wParam == '1' + i)
+			reversi.button1to8[i] = true;
 	}
+
+	reversi.buttonPressed();
+	reversi.updataScreen();
 }
 
 void KeyUpEvent( WPARAM wParam )
 {
 	//==== Tab、Enter、Ctrl... ====//
-	system("cls");
 	if( wParam == VK_TAB )
 	{
-		cout << "Tab Up" << endl;
+		//cout << "Tab Up" << endl;
 	}
 
 	//==== 英文字母或數字 ====//
-	switch( wParam )
+	//clean all button status
+	for (int i = 0; i < 8; i++)
 	{
-	case 'a':
-	case 'A':
-		cout << "A Up" << endl;
-		break;
+		if (wParam == 'a' + i || wParam == 'A' + i)
+		reversi.buttonAtoH[i] = false;
+		if (wParam == '1' + i)
+		reversi.button1to8[i] = false;
 	}
+
+	reversi.updataScreen();
 }
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow )
@@ -65,7 +80,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 		CLASS_NAME,             // 視窗類別
 		L"Reversi",				// 視窗標題
 		WS_OVERLAPPEDWINDOW,    // 視窗風格
-		0, 0, 50, 50,				// 視窗大小及位置
+		0, 0, 50, 50,			// 視窗大小及位置
 		NULL,					// Parent 視窗    
 		NULL,					// 選單
 		hInstance,				// Instance handle
@@ -82,6 +97,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	freopen( "CONOUT$", "wb", stdout );
 
 	ShowWindow( hwnd, nCmdShow );
+
+	//intially update the screen
+	reversi.updataScreen();
 
 	//==== 執行訊息迴圈 ====//
 	MSG msg = { };
